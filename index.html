@@ -5,59 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录流程原型</title>
     <style>
-        body {
-            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            color: #333;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
         }
         
         #flow-container {
             display: flex;
             align-items: center;
             justify-content: flex-start;
+            overflow-x: auto;
             padding: 30px;
             background-color: #f8f9fa;
-            overflow-x: auto;
-            white-space: nowrap;
             gap: 20px;
+            min-height: 100vh;
         }
         
         .mobile-screen {
             width: 300px;
-            min-height: 500px;
-            background: white;
+            height: 500px;
+            background-color: white;
             border-radius: 30px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            padding: 25px;
-            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
             position: relative;
             overflow: hidden;
         }
         
         .screen-header {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 600;
             font-size: 18px;
-            color: #2c3e50;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
         }
         
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .input-label {
             display: block;
-            margin-bottom: 8px;
             font-size: 14px;
-            color: #7f8c8d;
+            color: #666;
+            margin-bottom: 8px;
         }
         
         .input-field {
@@ -66,197 +67,205 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: border-color 0.3s;
         }
         
         .input-field:focus {
-            border-color: #3498db;
             outline: none;
+            border-color: #007bff;
         }
         
         .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
+            padding: 12px;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 500;
+            border: none;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
         }
         
         .btn-primary {
-            background: #3498db;
+            background-color: #007bff;
             color: white;
         }
         
         .btn-primary:hover {
-            background: #2980b9;
+            background-color: #0069d9;
         }
         
         .btn-secondary {
-            background: #ecf0f1;
-            color: #2c3e50;
-            margin-top: 10px;
+            background-color: #6c757d;
+            color: white;
         }
         
         .btn-secondary:hover {
-            background: #d5dbdb;
+            background-color: #5a6268;
+        }
+        
+        .status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
         }
         
         .flow-description {
-            background: #e9ecef;
+            background-color: #e9ecef;
             border: 1px solid #ced4da;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #555;
-            min-width: 200px;
-            max-width: 300px;
-            display: inline-flex;
-            align-items: center;
-            vertical-align: middle;
+            padding: 10px 15px;
+            border-radius: 4px;
+            min-width: 150px;
+            max-width: 250px;
+            display: inline-block;
+            position: relative;
+            transform: translateY(-15px);
+            flex-shrink: 0;
         }
         
         .flow-arrow-icon {
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            background-color: #3498db;
-            border-radius: 3px;
-            position: relative;
+            width: 20px;
+            height: 20px;
             margin-right: 8px;
-            vertical-align: middle;
+            position: relative;
+        }
+        
+        .flow-arrow-icon::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 12px;
+            height: 2px;
+            background-color: #495057;
+            transform: translateY(-50%);
         }
         
         .flow-arrow-icon::after {
-            content: '';
+            content: "";
             position: absolute;
+            right: 0;
             top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            border-top: 2px solid white;
-            border-right: 2px solid white;
-            transform: translate(-40%, -60%) rotate(45deg);
+            width: 6px;
+            height: 6px;
+            border-right: 2px solid #495057;
+            border-top: 2px solid #495057;
+            transform: translateY(-50%) rotate(45deg);
         }
         
-        .loading {
+        .screen-content {
+            flex: 1;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            height: 100px;
-        }
-        
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(52, 152, 219, 0.2);
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .success-message, .error-message {
-            text-align: center;
-            padding: 20px;
-            margin-top: 50px;
-        }
-        
-        .success-message {
-            color: #27ae60;
-        }
-        
-        .error-message {
-            color: #e74c3c;
-        }
-        
-        .icon {
-            font-size: 40px;
-            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>登录流程原型</h1>
-    
     <div id="flow-container">
         <!-- 屏幕1: 登录主界面 -->
         <div class="mobile-screen">
-            <div class="screen-header">欢迎登录</div>
-            <div style="text-align: center; margin-top: 80px;">
-                <div style="font-size: 24px; margin-bottom: 30px;">📱</div>
-                <button class="btn btn-primary">开始登录</button>
-                <button class="btn btn-secondary">注册账号</button>
+            <div class="screen-header">登录</div>
+            <div class="screen-content">
+                <div class="input-group">
+                    <label class="input-label">用户名</label>
+                    <input type="text" class="input-field" placeholder="请输入用户名">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">密码</label>
+                    <input type="password" class="input-field" placeholder="请输入密码">
+                </div>
+                <button class="btn btn-primary">登录</button>
+                <button class="btn btn-secondary" style="margin-top: 15px;">忘记密码</button>
             </div>
         </div>
         
         <!-- 流程描述1 -->
         <div class="flow-description">
-            <span class="flow-arrow-icon"></span>用户点击"开始登录"按钮进入登录表单
+            <span class="flow-arrow-icon"></span>
+            用户输入用户名和密码
         </div>
         
-        <!-- 屏幕2: 登录表单 -->
+        <!-- 屏幕2: 登录验证 -->
         <div class="mobile-screen">
-            <div class="screen-header">账号登录</div>
-            
-            <div class="input-group">
-                <label class="input-label">用户名/手机号</label>
-                <input type="text" class="input-field" placeholder="请输入用户名或手机号">
+            <div class="screen-header">验证中...</div>
+            <div class="screen-content">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="width: 50px; height: 50px; border: 3px solid #007bff; border-radius: 50%; border-top-color: transparent; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
+                    <p style="color: #666;">正在验证您的信息</p>
+                </div>
             </div>
-            
-            <div class="input-group">
-                <label class="input-label">密码</label>
-                <input type="password" class="input-field" placeholder="请输入密码">
-            </div>
-            
-            <button class="btn btn-primary">登录</button>
-            <button class="btn btn-secondary">忘记密码</button>
         </div>
         
         <!-- 流程描述2 -->
         <div class="flow-description">
-            <span class="flow-arrow-icon"></span>用户填写完用户名和密码后点击"登录"按钮
+            <span class="flow-arrow-icon"></span>
+            系统验证用户凭证
         </div>
         
-        <!-- 屏幕3: 登录验证中 -->
+        <!-- 屏幕3: 登录成功 -->
         <div class="mobile-screen">
-            <div class="screen-header">登录中</div>
-            <div class="loading">
-                <div class="loading-spinner"></div>
+            <div class="screen-header">欢迎回来</div>
+            <div class="screen-content">
+                <div class="status-message success">
+                    <p>登录成功！</p>
+                    <p style="margin-top: 10px;">正在跳转到首页...</p>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <div style="width: 40px; height: 40px; background-color: #28a745; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                        <div style="width: 12px; height: 6px; border-left: 2px solid white; border-bottom: 2px solid white; transform: rotate(-45deg) translateY(-1px);"></div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <!-- 流程描述3 -->
         <div class="flow-description">
-            <span class="flow-arrow-icon"></span>系统验证用户凭据，可能出现两种结果
+            <span class="flow-arrow-icon"></span>
+            验证通过，进入系统
         </div>
         
-        <!-- 屏幕4: 登录成功 -->
+        <!-- 屏幕4: 登录失败 -->
         <div class="mobile-screen">
-            <div class="success-message">
-                <div class="icon">✓</div>
-                <h3>登录成功</h3>
-                <p>欢迎回来！</p>
-                <button class="btn btn-primary" style="margin-top: 30px;">进入首页</button>
-            </div>
-        </div>
-        
-        <!-- 屏幕5: 登录失败 -->
-        <div class="mobile-screen">
-            <div class="error-message">
-                <div class="icon">✗</div>
-                <h3>登录失败</h3>
-                <p>用户名或密码错误</p>
-                <button class="btn btn-primary" style="margin-top: 30px;">重新登录</button>
-                <button class="btn btn-secondary" style="margin-top: 10px;">找回密码</button>
+            <div class="screen-header">登录</div>
+            <div class="screen-content">
+                <div class="status-message error">
+                    <p>用户名或密码错误</p>
+                    <p style="margin-top: 10px;">请重试</p>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">用户名</label>
+                    <input type="text" class="input-field" placeholder="请输入用户名">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">密码</label>
+                    <input type="password" class="input-field" placeholder="请输入密码">
+                </div>
+                <button class="btn btn-primary">重试</button>
+                <button class="btn btn-secondary" style="margin-top: 15px;">忘记密码</button>
             </div>
         </div>
     </div>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>
