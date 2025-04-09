@@ -92,31 +92,18 @@
             padding: 10px 15px;
             border-radius: 4px;
             max-width: 250px;
-            position: relative;
-            transform: translateY(-15px);
             font-size: 14px;
             color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .flow-arrow-icon {
-            display: inline-block;
             width: 16px;
             height: 16px;
-            background-color: #007bff;
-            position: relative;
-            margin-right: 8px;
-            border-radius: 2px;
-        }
-        
-        .flow-arrow-icon::after {
-            content: "";
-            position: absolute;
-            left: 5px;
-            top: 3px;
-            width: 6px;
-            height: 6px;
-            border-right: 2px solid white;
-            border-bottom: 2px solid white;
+            border-right: 2px solid #007bff;
+            border-bottom: 2px solid #007bff;
             transform: rotate(-45deg);
         }
         
