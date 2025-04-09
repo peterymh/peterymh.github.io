@@ -5,122 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录流程原型</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        
         body {
-            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
             padding: 20px;
+            background-color: #f5f5f5;
         }
         
         #flow-container {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            overflow-x: auto;
-            padding: 30px;
-            background-color: #f8f9fa;
-            gap: 20px;
-            min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          padding: 30px;
+          background-color: #f8f9fa;
+          gap: 20px;
+          width: max-content;
+          margin: 20px auto;
+          overflow-x: auto;
         }
         
         .mobile-screen {
             width: 300px;
-            height: 500px;
-            background-color: white;
-            border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            min-height: 500px;
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin: 20px;
             display: flex;
             flex-direction: column;
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
         }
         
-        .screen-header {
+        .screen-title {
+            text-align: center;
             font-size: 18px;
             font-weight: 600;
+            margin-bottom: 30px;
             color: #333;
-            margin-bottom: 20px;
-            text-align: center;
         }
         
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
-        .input-label {
-            display: block;
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        
-        .input-field {
+        input {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            box-sizing: border-box;
         }
         
-        .input-field:focus {
+        input:focus {
             outline: none;
             border-color: #007bff;
         }
         
-        .btn {
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 25px;
             font-size: 16px;
             font-weight: 500;
-            border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
             width: 100%;
             margin-top: 10px;
         }
         
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-        
-        .btn-primary:hover {
+        button:hover {
             background-color: #0069d9;
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        
-        .status-message {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
         }
         
         .flow-description {
@@ -128,70 +91,78 @@
             border: 1px solid #ced4da;
             padding: 10px 15px;
             border-radius: 4px;
-            min-width: 150px;
             max-width: 250px;
-            display: inline-block;
             position: relative;
             transform: translateY(-15px);
-            flex-shrink: 0;
+            font-size: 14px;
+            color: #495057;
         }
         
         .flow-arrow-icon {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            background-color: #007bff;
             position: relative;
-        }
-        
-        .flow-arrow-icon::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 12px;
-            height: 2px;
-            background-color: #495057;
-            transform: translateY(-50%);
+            margin-right: 8px;
+            border-radius: 2px;
         }
         
         .flow-arrow-icon::after {
             content: "";
             position: absolute;
-            right: 0;
-            top: 50%;
+            left: 5px;
+            top: 3px;
             width: 6px;
             height: 6px;
-            border-right: 2px solid #495057;
-            border-top: 2px solid #495057;
-            transform: translateY(-50%) rotate(45deg);
+            border-right: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(-45deg);
         }
         
-        .screen-content {
-            flex: 1;
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-screen {
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
+            text-align: center;
+        }
+        
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 30px;
         }
     </style>
 </head>
 <body>
     <div id="flow-container">
-        <!-- 屏幕1: 登录主界面 -->
+        <!-- 登录页面 -->
         <div class="mobile-screen">
-            <div class="screen-header">登录</div>
-            <div class="screen-content">
-                <div class="input-group">
-                    <label class="input-label">用户名</label>
-                    <input type="text" class="input-field" placeholder="请输入用户名">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">密码</label>
-                    <input type="password" class="input-field" placeholder="请输入密码">
-                </div>
-                <button class="btn btn-primary">登录</button>
-                <button class="btn btn-secondary" style="margin-top: 15px;">忘记密码</button>
+            <div class="screen-title">用户登录</div>
+            <div class="input-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" placeholder="请输入用户名">
             </div>
+            <div class="input-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" placeholder="请输入密码">
+            </div>
+            <button>登录</button>
         </div>
         
         <!-- 流程描述1 -->
@@ -200,14 +171,12 @@
             用户输入用户名和密码
         </div>
         
-        <!-- 屏幕2: 登录验证 -->
+        <!-- 验证页面 -->
         <div class="mobile-screen">
-            <div class="screen-header">验证中...</div>
-            <div class="screen-content">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <div style="width: 50px; height: 50px; border: 3px solid #007bff; border-radius: 50%; border-top-color: transparent; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
-                    <p style="color: #666;">正在验证您的信息</p>
-                </div>
+            <div class="screen-title">验证中...</div>
+            <div style="text-align: center; margin-top: 150px;">
+                <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #007bff; border-radius: 50%; margin: 0 auto 20px; animation: spin 1s linear infinite;"></div>
+                <p>正在验证您的信息</p>
             </div>
         </div>
         
@@ -217,55 +186,14 @@
             系统验证用户凭证
         </div>
         
-        <!-- 屏幕3: 登录成功 -->
+        <!-- 成功页面 -->
         <div class="mobile-screen">
-            <div class="screen-header">欢迎回来</div>
-            <div class="screen-content">
-                <div class="status-message success">
-                    <p>登录成功！</p>
-                    <p style="margin-top: 10px;">正在跳转到首页...</p>
-                </div>
-                <div style="text-align: center; margin-top: 30px;">
-                    <div style="width: 40px; height: 40px; background-color: #28a745; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
-                        <div style="width: 12px; height: 6px; border-left: 2px solid white; border-bottom: 2px solid white; transform: rotate(-45deg) translateY(-1px);"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 流程描述3 -->
-        <div class="flow-description">
-            <span class="flow-arrow-icon"></span>
-            验证通过，进入系统
-        </div>
-        
-        <!-- 屏幕4: 登录失败 -->
-        <div class="mobile-screen">
-            <div class="screen-header">登录</div>
-            <div class="screen-content">
-                <div class="status-message error">
-                    <p>用户名或密码错误</p>
-                    <p style="margin-top: 10px;">请重试</p>
-                </div>
-                <div class="input-group">
-                    <label class="input-label">用户名</label>
-                    <input type="text" class="input-field" placeholder="请输入用户名">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">密码</label>
-                    <input type="password" class="input-field" placeholder="请输入密码">
-                </div>
-                <button class="btn btn-primary">重试</button>
-                <button class="btn btn-secondary" style="margin-top: 15px;">忘记密码</button>
+            <div class="success-screen">
+                <div class="success-icon">✓</div>
+                <h2>登录成功</h2>
+                <p style="margin-top: 10px; color: #6c757d;">欢迎回来！</p>
             </div>
         </div>
     </div>
-
-    <style>
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
 </body>
 </html>
